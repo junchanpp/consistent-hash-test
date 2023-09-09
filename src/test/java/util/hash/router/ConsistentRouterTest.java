@@ -14,7 +14,7 @@ class ConsistentRouterTest {
 
   @BeforeEach
   void setUp() {
-    consistentRouter = new ConsistentRouter(List.of(), 10, new MD5Hash());
+    consistentRouter = new ConsistentRouter(List.of(), 5, new MD5Hash());
   }
 
   @Test
@@ -87,7 +87,7 @@ class ConsistentRouterTest {
   @Test
   void 노드4개_캐시히트_확인(){
     for (int i = 0; i < 4; i++) {
-      consistentRouter.addNode(new PhysicalNode("test" + i));
+      consistentRouter.addNode(new PhysicalNode("hash-table-" + i));
     }
 
     consistentRouter.get("testInput1");
@@ -114,11 +114,18 @@ class ConsistentRouterTest {
   @Test
   void 노드4개_데이터1000000개_조회_재시도(){
     for (int i = 0; i < 4; i++) {
-      consistentRouter.addNode(new PhysicalNode("test" + i));
+      consistentRouter.addNode(new PhysicalNode("hash-table-" + i));
     }
     for (int i = 0; i < 1000000; i++) {
       consistentRouter.get("testInput" + i);
     }
+
+    System.out.println("---------------------------------------------");
+    System.out.println("ConsistentRouterTest");
+    System.out.println("ConsistentRouterTest");
+    System.out.println("ConsistentRouterTest");
+    System.out.println("---------------------------------------------");
+    System.out.println("virtual node size : " + consistentRouter.getVirtualNodeCount());
 
     List<PhysicalNode> nodes = consistentRouter.getPhysicalNodes();
 
@@ -128,6 +135,7 @@ class ConsistentRouterTest {
       node.clearHit();
       node.clearMiss();
     }
+    System.out.println("---------------------------------------------");
 
     for (int i = 0; i < 1000000; i++) {
       consistentRouter.get("testInput" + i);
@@ -142,14 +150,21 @@ class ConsistentRouterTest {
   @Test
   void 노드4개_데이터1000000개_조회_노드1개삭제_재시도(){
     for (int i = 0; i < 4; i++) {
-      consistentRouter.addNode(new PhysicalNode("test" + i));
+      consistentRouter.addNode(new PhysicalNode("hash-table-" + i));
     }
+    var startTime = System.currentTimeMillis();
     for (int i = 0; i < 1000000; i++) {
       consistentRouter.get("testInput" + i);
     }
 
     List<PhysicalNode> nodes = consistentRouter.getPhysicalNodes();
 
+    System.out.println("---------------------------------------------");
+    System.out.println("ConsistentRouterTest");
+    System.out.println("ConsistentRouterTest");
+    System.out.println("ConsistentRouterTest");
+    System.out.println("---------------------------------------------");
+    System.out.println("virtual node size : " + consistentRouter.getVirtualNodeCount());
     for (PhysicalNode node : nodes) {
       System.out.println("첫번째 시도"+
           node.getNodeKey() + " : " + node.getCacheHit() + " : " + node.getCacheMiss());
@@ -157,10 +172,10 @@ class ConsistentRouterTest {
       node.clearMiss();
     }
 
-    consistentRouter.removeNode(new PhysicalNode("test1"));
+    consistentRouter.removeNode(new PhysicalNode("hash-table-0"));
 
     nodes = consistentRouter.getPhysicalNodes();
-
+    System.out.println("---------------------------------------------");
     for (int i = 0; i < 1000000; i++) {
       consistentRouter.get("testInput" + i);
     }
@@ -169,6 +184,8 @@ class ConsistentRouterTest {
           node.getNodeKey() + " : " + node.getCacheHit() + " : " + node.getCacheMiss());
       node.clear();
     }
+
+    System.out.println("endTime: " + (System.currentTimeMillis()-startTime));
   }
 
 }

@@ -75,4 +75,8 @@ public class ConsistentRouter implements Router {
     VirtualNode virtualNode = new VirtualNode(physicalNode, replicaIndex);
     nodes.remove(hashAlgorithm.hash(virtualNode.getKey()));
   }
+
+  public int getVirtualNodeCount() {
+    return virtualNodeCount;
+  }
 }

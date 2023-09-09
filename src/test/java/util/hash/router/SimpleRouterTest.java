@@ -47,12 +47,17 @@ class SimpleRouterTest {
   @Test
   void 노드4개추가_데이터1000000개추가_재시도(){
     for (int i = 0; i < 4; i++) {
-      simpleRouter.addNode(new PhysicalNode("test" + i));
+      simpleRouter.addNode(new PhysicalNode("hash-table-" + i));
     }
     for (int i = 0; i < 1000000; i++) {
       simpleRouter.get("testInput" + i);
     }
 
+    System.out.println("---------------------------------------------");
+    System.out.println("SimpleRouterTest");
+    System.out.println("SimpleRouterTest");
+    System.out.println("SimpleRouterTest");
+    System.out.println("---------------------------------------------");
     List<PhysicalNode> nodes = simpleRouter.getNodes();
 
     for (PhysicalNode node : nodes) {
@@ -61,7 +66,7 @@ class SimpleRouterTest {
       node.clearHit();
       node.clearMiss();
     }
-
+    System.out.println("---------------------------------------------");
     for (int i = 0; i < 1000000; i++) {
       simpleRouter.get("testInput" + i);
     }
@@ -75,12 +80,18 @@ class SimpleRouterTest {
   @Test
   void 노드4개추가_데이터1000000개_조회_노드1개삭제_재시도(){
     for (int i = 0; i < 4; i++) {
-      simpleRouter.addNode(new PhysicalNode("test" + i));
+      simpleRouter.addNode(new PhysicalNode("hash-table-" + i));
     }
+    var startTime = System.currentTimeMillis();
     for (int i = 0; i < 1000000; i++) {
       simpleRouter.get("testInput" + i);
     }
 
+    System.out.println("---------------------------------------------");
+    System.out.println("SimpleRouterTest");
+    System.out.println("SimpleRouterTest");
+    System.out.println("SimpleRouterTest");
+    System.out.println("---------------------------------------------");
     List<PhysicalNode> nodes = simpleRouter.getNodes();
 
     for (PhysicalNode node : nodes) {
@@ -89,8 +100,9 @@ class SimpleRouterTest {
       node.clearHit();
       node.clearMiss();
     }
-    simpleRouter.removeNode(new PhysicalNode("test0"));
+    simpleRouter.removeNode(new PhysicalNode("hash-table-0"));
 
+    System.out.println("---------------------------------------------");
     for (int i = 0; i < 1000000; i++) {
       simpleRouter.get("testInput" + i);
     }
@@ -99,5 +111,7 @@ class SimpleRouterTest {
           node.getNodeKey() + " : " + node.getCacheHit() + " : " + node.getCacheMiss());
       node.clear();
     }
+
+    System.out.println("endTime: " + (System.currentTimeMillis()-startTime));
   }
 }
